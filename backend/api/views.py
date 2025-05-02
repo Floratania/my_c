@@ -5,6 +5,10 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -35,3 +39,9 @@ class LoginView(APIView):
             'access': str(refresh.access_token)
         })
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile_view(request):
+    return Response({
+        'username': request.user.username
+    })
