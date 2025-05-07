@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import Dashboard from './components/Dashboard';
-import Flashcards from "./components/FlashcardTrainer";
+import FlashcardTrainer from "./components/FlashcardTrainer";
 import OxfordImporter from './components/OxfordImporter';
+import WordSetSelector from './components/WordSetSelector';
 // import DifficultySelector from "./components/DifficultySelector";
 import PrivateRoute from './utils/PrivateRoute';
 import React from "react";
@@ -65,6 +66,8 @@ function App() {
         <br />
         <Link to="/flashcards">Флеш-картки</Link>
         <br></br>
+        <Link to="/wordsets">Обрати набір слів</Link> |{' '}
+        {/* <Link to="/import">Імпорт словників</Link> */}
         <Link to="/import">Імпорт словників</Link>
       </nav>
 
@@ -83,7 +86,7 @@ function App() {
           path="/flashcards"
           element={
             <PrivateRoute>
-              <Flashcards />
+              <FlashcardTrainer />
             </PrivateRoute>
           }
         />
@@ -92,6 +95,14 @@ function App() {
           element={
             <PrivateRoute>
               <OxfordImporter />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="/wordsets"
+          element={
+            <PrivateRoute>
+              <WordSetSelector onSubscribed={() => {}} />
             </PrivateRoute>
           }
         />

@@ -28,7 +28,7 @@ def import_words_from_file(filename, wordset_name, user, file_dir=None):
     for word in words:
         try:
             translation = translate(word).lower()
-            print(f"✅ Translating: {word} -> {translation}")
+            # print(f"✅ Translating: {word} -> {translation}")
 
             Flashcard.objects.create(word=word, definition=translation, set=word_set)
             count += 1
