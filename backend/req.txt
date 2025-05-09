@@ -7,3 +7,5 @@ djangorestframework-simplejwt
 transformers
 torch
 sentencepiece
+openai
+python-dotenv

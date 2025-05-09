@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'flashcards',
     'api.apps.ApiConfig',
+    'leveltest',
 ]
 
 MIDDLEWARE = [

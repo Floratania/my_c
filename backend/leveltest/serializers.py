@@ -1,7 +1,8 @@
+# leveltest/serializers.py
 from rest_framework import serializers
-from .models import BaseQuestion
+from leveltest.models import LevelQuestion
 
-class BaseQuestionSerializer(serializers.ModelSerializer):
+class LevelQuestionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BaseQuestion
-        fields = '__all__'
+        model = LevelQuestion
+        exclude = ['correct']  # don’t send answer to frontend

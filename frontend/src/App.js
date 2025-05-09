@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import FlashcardTrainer from "./components/FlashcardTrainer";
 import OxfordImporter from './components/OxfordImporter';
 import WordSetSelector from './components/WordSetSelector';
+import LevelTest from './components/LevelTest';
 // import DifficultySelector from "./components/DifficultySelector";
 import PrivateRoute from './utils/PrivateRoute';
 import React from "react";
@@ -69,6 +70,7 @@ function App() {
         <Link to="/wordsets">Обрати набір слів</Link> |{' '}
         {/* <Link to="/import">Імпорт словників</Link> */}
         <Link to="/import">Імпорт словників</Link>
+        <Link to="/level-test">Тест рівня</Link>
       </nav>
 
       <Routes>
@@ -106,7 +108,9 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/level-test" element={<PrivateRoute><LevelTest /></PrivateRoute>} />
       </Routes>
+      
     </BrowserRouter>
   );
 }
