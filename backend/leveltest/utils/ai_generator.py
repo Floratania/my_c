@@ -2,7 +2,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    api_key=,
+    api_key='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',
     base_url="https://openrouter.ai/api/v1"
 )
 
@@ -42,6 +42,7 @@ Only include the array, nothing else.
 """
 
     response = client.chat.completions.create(
+        # model="nousresearch/deephermes-3-mistral-24b-preview:free",
         model="mistralai/mistral-7b-instruct",
         messages=[{"role": "user", "content": prompt}]
     )

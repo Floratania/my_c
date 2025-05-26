@@ -1,3 +1,4 @@
+from .models import UserTrainingPreferences
 from rest_framework import serializers
 from .models import Flashcard, WordSet, UserFlashcardProgress, UserWordSet
 
@@ -20,3 +21,12 @@ class UserWordSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserWordSet
         fields = ['wordset']
+        
+        
+
+
+class UserTrainingPreferencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTrainingPreferences
+        fields = ['selected_statuses']
+

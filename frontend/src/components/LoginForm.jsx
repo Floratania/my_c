@@ -1,19 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { login } from '../services/auth';
 import { AuthContext } from '../context/AuthContext';
-// import { login } from '../services/auth';
-
+import { useNavigate } from 'react-router-dom'; // ✅ ІМПОРТУЙ useNavigate
 
 const LoginForm = () => {
   const [form, setForm] = useState({ username: '', password: '' });
   const { loginUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // ✅ ІНІЦІАЛІЗУЙ
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await login(form.username, form.password);
       loginUser(data.access);
+      navigate('/dashboard'); // ✅ ПРАВИЛЬНЕ ПЕРЕНАПРАВЛЕННЯ
     } catch (err) {
       setError('❌ Невірний логін або пароль');
     }

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import Dashboard from './components/Dashboard';
@@ -6,50 +6,16 @@ import FlashcardTrainer from "./components/FlashcardTrainer";
 import OxfordImporter from './components/OxfordImporter';
 import WordSetSelector from './components/WordSetSelector';
 import LevelTest from './components/LevelTest';
-// import DifficultySelector from "./components/DifficultySelector";
+import WordDragAndDrop from "./components/WordAndDrag";
+import Translate from './components/Translate';
+import TenseSelector from './components/TenseSelector';
+import TensePage from './components/TensePage';
 import PrivateRoute from './utils/PrivateRoute';
-import React from "react";
+import React, { useContext } from "react";
 
-
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <nav>
-//         <Link to="/register">Реєстрація</Link> | <Link to="/login">Вхід</Link>
-//         <br></br>
-//         <Link to="/flashcards">Флеш-картки</Link>
-//         <br></br>
-//         {/* <Link to="/select-difficulty">Вивчати слова</Link> */}
-
-//       </nav>
-//       <Routes>
-//         <Route path="/register" element={<RegisterForm />} />
-//         <Route path="/login" element={<LoginForm />} />
-//         <Route
-//           path="/dashboard"
-//           element={
-//             <PrivateRoute>
-//               <Dashboard />
-//             </PrivateRoute>
-//           }
-//         />
-//         <Route
-//           path="/flashcards"
-//           element={
-//             <PrivateRoute>
-//               <Flashcards />
-//             </PrivateRoute>
-//           }
-//         />
- 
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
-import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
+
+
 
 function App() {
   const { token, logoutUser } = useContext(AuthContext);
@@ -64,53 +30,36 @@ function App() {
         ) : (
           <button onClick={logoutUser}>Вийти</button>
         )}
-        <br />
-        <Link to="/flashcards">Флеш-картки</Link>
-        <br></br>
-        <Link to="/wordsets">Обрати набір слів</Link> |{' '}
-        {/* <Link to="/import">Імпорт словників</Link> */}
-        <Link to="/import">Імпорт словників</Link>
-        <Link to="/level-test">Тест рівня</Link>
+        {token && (
+          <>
+            <br />
+            <Link to="/flashcards">Флеш-картки</Link><br />
+            <Link to="/wordsets">Обрати набір слів</Link> | <Link to="/import">Імпорт словників</Link><br />
+            <Link to="/level-test">Тест рівня</Link><br />
+            <Link to="/wd">Речення</Link><br />
+            <Link to="/translate">Перекладач</Link><br />
+            <Link to="/tenses">Вивчити часи</Link><br />
+          </>
+        )}
       </nav>
 
       <Routes>
+        <Route path="/" element={
+          token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+        } />
+        
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/flashcards"
-          element={
-            <PrivateRoute>
-              <FlashcardTrainer />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/import"
-          element={
-            <PrivateRoute>
-              <OxfordImporter />
-            </PrivateRoute>
-          }
-        />
-         <Route
-          path="/wordsets"
-          element={
-            <PrivateRoute>
-              <WordSetSelector onSubscribed={() => {}} />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/flashcards" element={<PrivateRoute><FlashcardTrainer /></PrivateRoute>} />
+        <Route path="/import" element={<PrivateRoute><OxfordImporter /></PrivateRoute>} />
+        <Route path="/wordsets" element={<PrivateRoute><WordSetSelector onSubscribed={() => {}} /></PrivateRoute>} />
+        <Route path="/wd" element={<PrivateRoute><WordDragAndDrop /></PrivateRoute>} />
         <Route path="/level-test" element={<PrivateRoute><LevelTest /></PrivateRoute>} />
+        <Route path="/translate" element={<Translate />} />
+        <Route path="/tenses" element={<TenseSelector />} />
+        <Route path="/tense/:tenseName" element={<TensePage />} />
       </Routes>
-      
     </BrowserRouter>
   );
 }

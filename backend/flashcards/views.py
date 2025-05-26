@@ -8,7 +8,38 @@ from django.db.models import Q, Subquery
 from rest_framework.parsers import MultiPartParser
 import tempfile
 import os
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import UserTrainingPreferences
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import UserTrainingPreferences
+
+from rest_framework import viewsets, mixins, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import UserTrainingPreferences
+from .serializers import UserTrainingPreferencesSerializer
+
+class UserTrainingPreferencesViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        prefs, _ = UserTrainingPreferences.objects.get_or_create(user=request.user)
+        return Response({'selected_statuses': prefs.selected_statuses})
+
+    def create(self, request):
+        prefs, _ = UserTrainingPreferences.objects.get_or_create(user=request.user)
+        selected_statuses = request.data.get('selected_statuses', [])
+        if not isinstance(selected_statuses, list):
+            return Response({'error': 'selected_statuses must be a list'}, status=status.HTTP_400_BAD_REQUEST)
+
+        prefs.selected_statuses = selected_statuses
+        prefs.save()
+        return Response({'message': 'Preferences updated'})
 
 
 class WordSetViewSet(viewsets.ModelViewSet):
@@ -61,38 +92,76 @@ class WordSetViewSet(viewsets.ModelViewSet):
         })
         
         
-        @action(detail=False, methods=['post'])
-        def import_custom(self, request):
-            uploaded_file = request.FILES.get('file')
-            if not uploaded_file:
-                return Response({'error': 'Файл не надано'}, status=400)
+    # @action(detail=False, methods=['post'])
+    # def import_custom(self, request):
+    #     uploaded_file = request.FILES.get('file')
+    #     if not uploaded_file:
+    #         return Response({'error': 'Файл не надано'}, status=400)
 
-            if not uploaded_file.name.endswith('.txt'):
-                return Response({'error': 'Потрібен .txt файл'}, status=400)
+    #     if not uploaded_file.name.endswith('.txt'):
+    #         return Response({'error': 'Потрібен .txt файл'}, status=400)
 
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as tmp:
-                for chunk in uploaded_file.chunks():
-                    tmp.write(chunk)
-                tmp_path = tmp.name
+    #     with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as tmp:
+    #         for chunk in uploaded_file.chunks():
+    #             tmp.write(chunk)
+    #         tmp_path = tmp.name
 
-            try:
-                wordset_name = f"Custom - {request.user.username} - {uploaded_file.name}"
-                count, set_id = import_words_from_file(
-                    filename=os.path.basename(tmp_path),
-                    wordset_name=wordset_name,
-                    user=request.user,
-                    file_dir=os.path.dirname(tmp_path)
-                )
-            finally:
-                os.remove(tmp_path)
+    #     try:
+    #         wordset_name = f"Custom - {request.user.username} - {uploaded_file.name}"
+    #         count, set_id = import_words_from_file(
+    #             filename=os.path.basename(tmp_path),
+    #             wordset_name=wordset_name,
+    #             user=request.user,
+    #             file_dir=os.path.dirname(tmp_path)
+    #         )
+    #     finally:
+    #         os.remove(tmp_path)
 
+    #     return Response({
+    #         'status': 'success',
+    #         'imported': count,
+    #         'set_id': set_id,
+    #     })
+    
+    @action(detail=False, methods=['post'], parser_classes=[MultiPartParser])
+    def import_custom(self, request):
+        uploaded_file = request.FILES.get('file')
+        if not uploaded_file:
+            return Response({'error': 'Файл не надано'}, status=400)
+
+        if not uploaded_file.name.endswith('.txt'):
+            return Response({'error': 'Потрібен .txt файл'}, status=400)
+
+        wordset_name = f"Custom - {request.user.username} - {uploaded_file.name}"
+
+        # ✅ Перевірка, чи користувач уже завантажував цей файл
+        if WordSet.objects.filter(owner=request.user, name=wordset_name).exists():
             return Response({
-                'status': 'success',
-                'imported': count,
-                'set_id': set_id,
-            })
-        
-        
+                'error': f'Файл "{uploaded_file.name}" вже був завантажений вами раніше.'
+            }, status=400)
+
+        # ⬇️ Тимчасове збереження файлу
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as tmp:
+            for chunk in uploaded_file.chunks():
+                tmp.write(chunk)
+            tmp_path = tmp.name
+
+        try:
+            count, set_id = import_words_from_file(
+                filename=os.path.basename(tmp_path),
+                wordset_name=wordset_name,
+                user=request.user,
+                file_dir=os.path.dirname(tmp_path)
+            )
+        finally:
+            os.remove(tmp_path)
+
+        return Response({
+            'status': 'success',
+            'imported': count,
+            'set_id': set_id,
+        })
+
 
 
 class FlashcardViewSet(viewsets.ModelViewSet):
@@ -134,3 +203,5 @@ class UserFlashcardProgressViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+

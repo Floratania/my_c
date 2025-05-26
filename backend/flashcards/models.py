@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class WordSet(models.Model):
     name = models.CharField(max_length=100)
@@ -36,3 +38,16 @@ class UserWordSet(models.Model):
 
     class Meta:
         unique_together = ('user', 'wordset')
+        
+        # flashcards/models.py
+
+
+class UserTrainingPreferences(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    selected_statuses = models.JSONField(default=list)  # 👈 ОБОВ’ЯЗКОВО!
+
+
+@receiver(post_save, sender=User)
+def create_user_preferences(sender, instance, created, **kwargs):
+    if created:
+        UserTrainingPreferences.objects.create(user=instance)

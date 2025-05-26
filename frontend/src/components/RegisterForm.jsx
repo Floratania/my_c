@@ -43,7 +43,7 @@ export default function RegisterForm() {
     email: "",
     phone: "",
     gender: "",
-    birthdate: "",
+    birth_date: "",
   });
   const [message, setMessage] = useState("");
 
@@ -82,7 +82,7 @@ export default function RegisterForm() {
       <input name="last_name" type="last_name" placeholder="Прізвище" onChange={handleChange} />
       <input name="email" type="email" placeholder="Email" onChange={handleChange} />
       <input name="phone" type="tel" placeholder="Телефон" onChange={handleChange} />
-      <input name="birthdate" type="date" onChange={handleChange} />
+      <input name="birth_date" type="date" onChange={handleChange} />
       <select name="gender" onChange={handleChange}>
         <option value="">Стать</option>
         <option value="male">Чоловік</option>

@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'flashcards',
     'api.apps.ApiConfig',
     'leveltest',
+    'worddrag',
+    'translator',
+    'tense_classifier'
 ]
 
 MIDDLEWARE = [

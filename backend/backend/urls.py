@@ -29,6 +29,10 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/flashcards/', include('flashcards.urls')),
     path('api/leveltest/', include('leveltest.urls')),
+    path('api/drag-sentence/', include('worddrag.urls')),
+    path('api/translator/', include('translator.urls')),
+    path('api/tense/', include('tense_classifier.urls')),
+
 
     
 ]
