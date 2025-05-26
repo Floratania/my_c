@@ -52,11 +52,17 @@ function App() {
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            }
             <Route path="/flashcards" element={<PrivateRoute><FlashcardTrainer /></PrivateRoute>} />
+            }
             <Route path="/import" element={<PrivateRoute><OxfordImporter /></PrivateRoute>} />
+            }
             <Route path="/wordsets" element={<PrivateRoute><WordSetSelector onSubscribed={() => {}} /></PrivateRoute>} />
+            }
             <Route path="/wd" element={<PrivateRoute><WordDragAndDrop /></PrivateRoute>} />
+            }
             <Route path="/level-test" element={<PrivateRoute><LevelTest /></PrivateRoute>} />
+            }
             <Route path="/translate" element={<Translate />} />
             <Route path="/tenses" element={<TenseSelector />} />
             <Route path="/tense/:tenseName" element={<TensePage />} />
