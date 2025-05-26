@@ -66,7 +66,8 @@ function App() {
           Sign in
         </Typography>
         <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && <Alert severity="error\" sx={{ mb: 2 }}>{error}</Alert>}
+          }
           <TextField
             margin="normal"
             required
