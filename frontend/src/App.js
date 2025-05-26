@@ -33,6 +33,7 @@ function App() {
       <form onSubmit={handleSubmit} className="login-form">
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
+        }
         <div>
           <input
             type="text"
